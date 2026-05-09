@@ -1,0 +1,187 @@
+# Technical Documentation
+
+## Project: Loan Portfolio Risk Analysis
+
+# 1. Project Overview
+
+This project was developed to analyze and monitor credit risk exposure within a retail loan portfolio. The solution integrates Excel, SQL, and Power BI to create a complete analytics workflow for portfolio risk assessment and business reporting.
+
+The project architecture follows a multi-stage analytical pipeline involving:
+
+- Data preparation
+- Data storage and querying
+- KPI computation
+- Risk segmentation analysis
+- Dashboard visualization
+- Business insight generation
+
+---
+
+# 2. Solution Architecture
+
+The project architecture consists of the following components:
+
+
+Raw Dataset
+     ↓
+Excel Data Cleaning & Transformation
+     ↓
+MySQL Database Storage
+     ↓
+SQL Risk Analysis & KPI Computation
+     ↓
+Power BI Dashboard Development
+     ↓
+Business Reporting & Insights
+
+
+
+# 3. Technology Stack
+
+| Technology      | Purpose                                   |
+| --------------- | ----------------------------------------- |
+| Microsoft Excel | Data cleaning and preprocessing           |
+| MySQL           | Data querying and analytical computations |
+| Power BI        | Interactive dashboard development         |
+| Git & GitHub    | Version control and documentation         |
+
+
+# 4. Data Preparation Process (Excel)
+
+The initial dataset was cleaned and transformed using Microsoft Excel before being imported into MySQL for analysis.
+
+Data Cleaning Activities
+
+The following preprocessing steps were performed:
+
+- Handling missing values
+- Correcting inconsistent records
+- Standardizing categorical variables
+- Removing duplicate records
+- Formatting date and numeric fields
+- Preparing analytical fields for SQL processing
+  Output
+
+The cleaned dataset was exported and prepared for database import.
+
+# 5. Database & SQL Analysis
+
+The cleaned dataset was imported into MySQL for analytical processing.
+
+SQL Activities Performed
+
+SQL was used to:
+
+- Perform exploratory data analysis
+- Calculate portfolio KPIs
+- Conduct segmentation analysis
+- Measure portfolio exposure
+- Evaluate default trends
+- Analyze risk distribution
+- Core Analytical Areas
+
+The SQL analysis focused on:
+
+- Portfolio exposure analysis
+- Loan-at-risk analysis
+- Non-performing loan analysis
+- Default rate computation
+- Portfolio risk segmentation
+- Geographic risk analysis
+- Customer demographic analysis
+
+# 6. KPI Development
+
+Several business-critical KPIs were developed to monitor portfolio health and credit risk exposure.
+
+- KPIs Developed
+- Total Exposure
+- Loan at Risk
+- Non-Performing Loan (NPL) Ratio
+- Default Rate
+- High Risk Rate
+- Portfolio Risk Mix
+- Closed Loan Ratio
+
+The KPI definitions and formulas are documented separately within the KPI Definitions document.
+
+# 7. Power BI Dashboard Development
+
+Power BI was used to create an interactive dashboard for portfolio monitoring and executive reporting.
+
+Dashboard Components
+
+The dashboard includes:
+
+- KPI summary cards
+- Portfolio risk overview
+- Risk segmentation visuals
+- Geographic exposure analysis
+- Loan-type risk analysis
+- Employment-based risk analysis
+- Age-group risk analysis
+- Interactive filtering capabilities
+- Dashboard Design Approach
+
+The dashboard design focused on:
+
+- Executive-level readability
+- Consistent semantic coloring
+- Clear analytical hierarchy
+- Interactive exploration
+- Risk-focused storytelling
+
+# 8. Analytical Methodology
+
+The analytical approach used within the project follows descriptive and diagnostic analytics principles.
+
+# Descriptive Analytics
+
+Used to summarize:
+
+- Portfolio size
+- Exposure levels
+- Risk distribution
+- Default trends
+- Diagnostic Analytics
+
+Used to identify:
+
+- Risk concentration areas
+- High-default customer segments
+- Geographic exposure patterns
+- Loan product vulnerabilities
+
+# 9. Business Value
+
+The solution provides stakeholders with:
+
+- Improved visibility into portfolio health
+- Faster identification of high-risk segments
+- Enhanced credit risk monitoring
+- Data-driven decision support
+- Executive-level portfolio reporting
+
+# 10. Limitations
+
+The project has the following limitations:
+
+- Analysis is based on historical data only
+- No predictive modeling was implemented
+- External credit data sources were not integrated
+- Real-time monitoring was outside project scope
+
+# 11. Future Improvements
+
+Potential future enhancements include:
+
+- Predictive credit risk modeling
+- Machine learning-based risk scoring
+- Real-time portfolio monitoring
+- Automated alert systems
+- Integration with external credit data
+- Advanced stress-testing analysis
+
+
+
+
