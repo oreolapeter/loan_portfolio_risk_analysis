@@ -1,0 +1,144 @@
+# KPI Definitions Document
+
+## Project: Loan Portfolio Risk Analysis
+
+This document defines the key performance indicators (KPIs) used within the credit risk analytics solution.
+
+---
+
+# 1. Total Exposure
+
+## Definition
+Total outstanding loan amount within the portfolio.
+
+## Business Purpose
+Measures the total financial exposure currently held by the institution.
+
+## Formula
+
+SUM(Outstanding_Amount)
+
+## Interpretation
+
+Higher exposure indicates greater portfolio size and increased credit risk exposure.
+
+# 2. Loan at Risk
+
+Definition
+
+Total outstanding exposure associated with active, delinquent, and defaulted loans.
+
+Business Purpose
+
+Measures the portion of the portfolio currently exposed to repayment risk.
+
+Formula
+SUM(Outstanding_Amount)
+WHERE Loan_Status IN ('Active', 'Delinquent', 'Defaulted')
+Interpretation
+
+A high loan-at-risk value may indicate elevated portfolio vulnerability.
+
+# 3. Non-Performing Loan (NPL) Ratio
+
+Definition
+
+Percentage of defaulted loan exposure relative to total outstanding exposure.
+
+Business Purpose
+
+Measures the proportion of the portfolio classified as non-performing.
+
+Formula
+(Defaulted Exposure / Total Outstanding Exposure) * 100
+Interpretation
+
+Higher NPL ratios indicate deteriorating portfolio quality and increased default exposure.
+
+# 4. Default Rate
+
+Definition
+
+Percentage of defaulted loans relative to the total active loan portfolio.
+
+Business Purpose
+
+Measures the frequency of loan defaults within the portfolio.
+
+Formula
+(Number of Defaulted Loans / Total Active Loans) * 100
+
+
+Interpretation
+
+An increasing default rate may indicate weakening credit quality or ineffective underwriting policies.
+
+
+## 5. High Risk Rate
+
+Definition
+
+Percentage of total portfolio exposure classified as high risk.
+
+Business Purpose
+
+Measures the concentration of high-risk exposure within the portfolio.
+
+Formula
+(High Risk Exposure / Total Exposure) * 100
+Interpretation
+
+Higher high-risk rates indicate greater portfolio vulnerability.
+
+# 6. Portfolio Risk Mix
+
+Definition
+
+Distribution of portfolio exposure across low-risk, medium-risk, and high-risk categories.
+
+Business Purpose
+
+Provides visibility into the overall risk composition of the portfolio.
+
+Formula
+(Risk Category Exposure / Total Exposure) * 100
+
+Interpretation
+
+A balanced portfolio should maintain controlled levels of medium-risk and high-risk exposure.
+
+
+# 7. Closed Loan Ratio
+
+Definition
+
+Percentage of loans that have been fully repaid or closed.
+
+Business Purpose
+
+Measures portfolio maturity and loan repayment performance.
+
+Formula
+(Closed Loans / Total Loans) * 100
+Interpretation
+
+Higher closed loan ratios may indicate healthy repayment trends.
+
+# 8. Risk Concentration Metrics
+
+Definition
+
+Measures the distribution of risk exposure across customer and loan segments.
+
+Segmentation Areas
+Location
+Loan Type
+Employment Type
+Age Group
+Business Purpose
+
+Identifies segments contributing most significantly to portfolio risk.
+
+Interpretation
+
+High concentration within specific segments may require targeted risk mitigation strategies.
