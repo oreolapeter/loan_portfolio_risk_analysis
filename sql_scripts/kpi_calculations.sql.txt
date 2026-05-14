@@ -1,0 +1,55 @@
+-- KPIs
+
+-- =========================================
+-- KPI: Defaulted loan Description (SUM,COUNT,NPLr,DLCr)
+-- Description:
+-- Calculates total outstanding loan exposure
+-- excluding closed loans.
+-- =========================================
+
+
+SELECT SUM(CASE		
+				WHEN Loan_Status = 'Defaulted' THEN Outstanding_Amount ELSE 0
+		   END) Defaulted_Exposure,
+           COUNT(CASE		
+				WHEN Loan_Status = 'Defaulted' THEN Outstanding_Amount ELSE null
+		   END) AS Defaulted_Loan_Count,
+           ROUND(SUM(CASE		
+				WHEN Loan_Status = 'Defaulted' THEN Outstanding_Amount ELSE 0
+		   END)/(SELECT sum(Outstanding_Amount) AS Loan_at_Risk
+					FROM Portfolio_table
+					WHERE Loan_Status IN ('Active','Delinquent','Defaulted') )*100,2) AS NPL_Ratio,
+			COUNT(CASE		
+				WHEN Loan_Status = 'Defaulted' THEN Outstanding_Amount ELSE null
+		   END)/ (SELECT COUNT(Outstanding_Amount) AS Loan_at_Risk
+					FROM Portfolio_table
+					WHERE Loan_Status IN ('Active','Delinquent','Defaulted') )*100 AS Defaulted_Frequency_Rate
+FROM Portfolio_table;
+
+-- ==================================================================
+-- Loan Risk Mix
+-- Description 
+-- Estimate the the number of loans for each of the risk level
+-- ===================================================================
+SELECT Result,
+		COUNT(Loan_ID) AS No_of_Loan
+
+FROM Portfolio_table
+WHERE Loan_Status != 'Closed'
+GROUP BY Result;
+-- ==================================================================
+-- Risk Mix Value
+-- Description 
+-- The Value of Loan allocated to each of of the Risk Level
+-- ===================================================================
+SELECT Result,
+		ROUND(SUM(Outstanding_Amount),2) AS Total_Loan_Amount
+
+FROM Portfolio_table
+WHERE Loan_Status != 'Closed'
+GROUP BY Result;
+/*
+'Low Risk', Sum:'156,296,574.68' Count: 584
+'Medium Risk', Sum: '280,026,822.86' Count: 682
+'High Risk', Sum: '133,972,852.62' Count: 336
+*/
