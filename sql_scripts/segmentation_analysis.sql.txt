@@ -1,0 +1,206 @@
+-- =============================================================================
+-- SEGMENTATION ANALYSIS
+-- Purpose:
+-- This script analyzes portfolio risk distribution across key business dimensions:
+-- Location, Age, Employment Type, and Loan Type.
+-- It helps identify concentration of risk and exposure patterns.
+-- ==============================================================================
+-- -------------------------------------------------------------------------------
+-- ==============================================================================
+-- 1. LOCATION RISK DISTRIBUTION (CROSS-SEGMENT SUMMARY)
+-- Purpose:
+-- Aggregates total risk exposure across locations using a CTE.
+-- =============================================================================
+WITH Location_Risk AS (SELECT Location,
+		COUNT(Loan_ID) AS No_of_Loan,
+        Result
+
+FROM Portfolio_table
+WHERE Result IN ('Low Risk','High Risk','Medium Risk')
+GROUP BY Location,Result)
+SELECT Location,
+		SUM(No_of_Loan) AS Risk_by_Location
+FROM Location_Risk
+GROUP BY Location
+ORDER BY Risk_by_Location;
+
+-- ===============================================================================
+-- 2. LOCATION VS RISK CATEGORY (LOAN COUNT)
+-- Purpose:
+-- Shows distribution of loan counts across risk categories by location.
+-- ===============================================================================
+SELECT Location,
+		Result,
+        COUNT(Loan_ID) AS Loan_Count
+FROM Portfolio_table
+WHERE Loan_Status != 'Closed'
+GROUP BY Location, Result
+ORDER BY Location, Loan_Count DESC;
+-- ==================================================================================
+-- 3. HIGH RISK EXPOSURE BY LOCATION
+-- Purpose:
+-- Identifies financial exposure concentration for high-risk loans across locations.
+-- ==================================================================================
+SELECT Location,
+		Result,
+        ROUND(SUM(Outstanding_Amount),2) AS Loan_Sum
+FROM Portfolio_table
+WHERE Loan_Status != 'Closed' AND Result = 'High Risk'
+GROUP BY Location, Result
+ORDER BY Loan_Sum DESC, Result;
+
+/*
+'Low Risk', '584'
+'Medium Risk', '682'
+'Loan Closed', '398'
+'High Risk', '336'
+
+
+Kano	375
+Abuja	399
+Ibadan	422
+Lagos	401
+Port Harcourt	403
+
+*/
+-- ===============================================================================
+-- 4. RISK DISTRIBUTION BY LOCATION (COUNT-BASED)
+-- Purpose:
+-- Breaks down the number of loans per risk category within each location.
+-- ===============================================================================
+SELECT Location,
+		COUNT(CASE WHEN Result= 'Low Risk' THEN 1 END) AS Low_Risk,
+        COUNT(CASE WHEN Result= 'Medium Risk' THEN 1 END) AS Medium_Risk,
+        COUNT(CASE WHEN Result= 'High Risk' THEN 1 END) AS High_Risk
+
+FROM Portfolio_table
+GROUP BY Location
+ORDER BY High_Risk DESC;
+
+-- ==========================================================================================
+-- 5. RISK EXPOSURE BY LOCATION (VALUE-BASED)
+-- Purpose:
+-- Measures monetary exposure distribution across risk categories by location.
+-- ==========================================================================================
+SELECT Location,
+		ROUND(SUM(CASE WHEN Result= 'Low Risk' THEN Outstanding_Amount END),2) AS Low_Risk,
+        ROUND(SUM(CASE WHEN Result= 'Medium Risk' THEN Outstanding_Amount END),2) AS Medium_Risk,
+        ROUND(SUM(CASE WHEN Result= 'High Risk' THEN Outstanding_Amount END),2) AS High_Risk
+
+FROM Portfolio_table
+GROUP BY Location
+ORDER BY High_Risk DESC;
+
+-- =============================================================
+-- 6. AGE VS RISK CATEGORY (COUNT MATRIX)
+-- Purpose:
+-- Shows risk distribution across different age brackets.
+-- =============================================================
+
+SELECT Result,
+		COUNT(CASE WHEN Age BETWEEN 18 AND 25 THEN 1 END) AS '25 Below',
+        COUNT(CASE WHEN Age BETWEEN 26 AND 35 THEN 1 END) AS '26 - 35',
+        COUNT(CASE WHEN Age BETWEEN 36 AND 45 THEN 1 END) AS '36 - 45' ,
+        COUNT(CASE WHEN Age BETWEEN 46 AND 55 THEN 1 END) AS '46 - 55' ,
+	    COUNT(CASE WHEN Age > 55  THEN 1 END) AS '55 Above' 
+FROM Portfolio_table
+WHERE Loan_status != 'Closed'
+GROUP BY Result
+ORDER BY Result;
+-- =========================================================================================
+-- 7. AGE GROUP TRANSFORMATION (CTE PREPARATION)
+-- Purpose:
+-- Converts raw age into structured age groups for deeper analysis.
+-- ========================================================================================
+WITH Age_Range_Table AS (
+		SELECT CASE WHEN Age BETWEEN 18 AND 25 THEN '18-25'
+             WHEN Age BETWEEN 26 AND 35 THEN '26 - 35'
+             WHEN Age BETWEEN 36 AND 45 THEN '36 - 45' 
+             WHEN Age BETWEEN 46 AND 55 THEN '46 - 55'
+             ELSE '56+' END AS Age_group,
+             Result,
+             Loan_Status
+             
+		FROM Portfolio_Table
+)
+
+SELECT Age_group,
+		COUNT(CASE WHEN RESULT = 'Low Risk' THEN 1 END) AS Low_Risk,
+        COUNT(CASE WHEN RESULT = 'Medium Risk' THEN 1 END) AS Medium_Risk,
+        COUNT(CASE WHEN RESULT = 'High Risk' THEN 1 END) AS High_Risk
+FROM Age_Range_Table
+WHERE Loan_status != 'Closed'
+GROUP BY Age_group
+ORDER BY High_Risk DESC;
+
+-- ==================================================================================
+-- 8. AGE VS RISK EXPOSURE (VALUE-BASED)
+-- Purpose:
+-- Measures financial exposure across age groups and risk categories.
+-- =================================================================================
+WITH Age_Range_Table AS (
+		SELECT CASE WHEN Age BETWEEN 18 AND 25 THEN '18-25'
+             WHEN Age BETWEEN 26 AND 35 THEN '26 - 35'
+             WHEN Age BETWEEN 36 AND 45 THEN '36 - 45' 
+             WHEN Age BETWEEN 46 AND 55 THEN '46 - 55'
+             ELSE '56+' END AS Age_group,
+             Result,
+             Loan_Status,
+             Outstanding_Amount
+             
+		FROM Portfolio_Table
+)
+
+SELECT Age_group,
+		ROUND(SUM(CASE WHEN RESULT = 'Low Risk' THEN Outstanding_Amount END),2) AS Low_Risk,
+        ROUND(SUM(CASE WHEN RESULT = 'Medium Risk' THEN Outstanding_Amount END),2) AS Medium_Risk,
+        ROUND(SUM(CASE WHEN RESULT = 'High Risk' THEN Outstanding_Amount END),2) AS High_Risk
+FROM Age_Range_Table
+WHERE Loan_status != 'Closed'
+GROUP BY Age_group;
+/*
+25 - Below,
+26-35,
+36-45,
+46-55,
+56 and Above
+*/ 
+ 
+ -- ==================================================================================================================
+ -- 9. EMPLOYMENT TYPE RISK EXPOSURE
+-- Purpose:
+-- Evaluates risk exposure across employment categories.
+ -- ==================================================================================================================
+ SELECT Employment_Type,
+		ROUND(SUM(CASE WHEN Result = 'Low Risk' THEN Outstanding_Amount ELSE 0 END),2) AS Low_Risk_Exposure,
+        ROUND(SUM(CASE WHEN Result = 'Medium Risk' THEN Outstanding_Amount ELSE 0 END),2) AS Medium_Risk_Exposure,
+        ROUND(SUM(CASE WHEN Result = 'High Risk' THEN Outstanding_Amount ELSE 0 END),2) AS High_Risk_Exposure
+ FROM Portfolio_Table
+ WHERE Loan_Status != 'Closed'
+ GROUP BY Employment_Type;
+ -- ===================================================================================================================
+ -- 10. LOAN TYPE RISK EXPOSURE
+-- Purpose:
+-- Identifies risk exposure by loan product type.
+ -- ===================================================================================================================
+ SELECT Loan_Type,
+		ROUND(SUM(CASE WHEN Result = 'Low Risk' THEN Outstanding_Amount ELSE 0 END),2) AS Low_Risk_Exposure,
+        ROUND(SUM(CASE WHEN Result = 'Medium Risk' THEN Outstanding_Amount ELSE 0 END),2) AS Medium_Risk_Exposure,
+        ROUND(SUM(CASE WHEN Result = 'High Risk' THEN Outstanding_Amount ELSE 0 END),2) AS High_Risk_Exposure
+ FROM Portfolio_Table
+ WHERE Loan_Status != 'Closed'
+ GROUP BY Loan_Type;
+ 
+ -- ================================================================================================
+-- 11. LOAN TYPE + LOCATION RISK EXPOSURE
+-- Purpose:
+-- Combines product and geographic segmentation for deeper insight.
+-- =================================================================================================
+  SELECT Loan_Type,
+		Location,
+		ROUND(SUM(CASE WHEN Result = 'Low Risk' THEN Outstanding_Amount ELSE 0 END),2) AS Low_Risk_Exposure,
+        ROUND(SUM(CASE WHEN Result = 'Medium Risk' THEN Outstanding_Amount ELSE 0 END),2) AS Medium_Risk_Exposure,
+        ROUND(SUM(CASE WHEN Result = 'High Risk' THEN Outstanding_Amount ELSE 0 END),2) AS High_Risk_Exposure
+ FROM Portfolio_Table
+ WHERE Loan_Status != 'Closed'
+ GROUP BY Loan_Type,Location;
