@@ -1,0 +1,15 @@
+## Excel Analytical Models
+
+The project was first explored and validated in Excel using pivot-based analytical models before the data was migrated into SQL and Power BI for enterprise reporting. 
+
+The Excel workbook contains supporting portfolio risk models used for:
+- loan distribution analysis,
+- exposure segmentation,
+- risk concentration monitoring,
+- and portfolio validation prior to dashboard development.
+
+The workbook includes:
+- Loan Count Distribution Matrix
+- Outstanding Exposure Matrix
+- Portfolio Risk Percentage Distribution
+- Pivot-based Risk Segmentation Models

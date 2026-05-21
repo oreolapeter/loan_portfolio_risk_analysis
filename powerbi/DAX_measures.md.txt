@@ -1,0 +1,325 @@
+# Total Exposure
+
+## DAX Formula
+
+```DAX
+Total Exposure = 
+SUM(portfolio_table[Loan_Amount])
+```
+
+## Business Definition
+
+Total Exposure represents the cumulative value of all loans disbursed within the portfolio. It measures the overall size of the organization’s lending activities regardless of repayment status.
+
+## Analytical Purpose
+
+This metric is used to evaluate:
+- Overall portfolio size
+- Lending scale
+- Total financial commitment to borrowers
+- Exposure concentration across business segments
+
+It serves as a foundational metric for several downstream portfolio risk calculations including:
+- Portfolio Repayment Ratio
+- Loan at Risk
+- Non-Performing Loan (NPL) Ratio
+- Default Exposure Analysis
+
+## Business Interpretation
+
+A higher Total Exposure indicates a larger lending portfolio and increased capital deployment. While portfolio growth may signal business expansion, it also increases the organization’s overall credit risk exposure if repayment performance deteriorates.
+
+## Technical Notes
+
+- Calculated using the `Loan_Amount` column.
+- Includes both active and closed loans.
+- Aggregated at portfolio level using the SUM function.
+
+
+================================================================================
+
+# Loan at Risk
+
+## DAX Formula
+
+```DAX
+Loan at Risk = 
+CALCULATE(
+    SUM(portfolio_table[Outstanding_Amount]),
+    portfolio_table[Loan_Status] IN {"Active","Delinquent","Defaulted"}
+)
+```
+
+## Business Definition
+
+Loan at Risk represents the total outstanding loan exposure currently exposed to repayment uncertainty within the portfolio. It includes all loans that remain financially active, including performing, delinquent, and defaulted accounts.
+
+## Analytical Purpose
+
+This metric is used to:
+- Measure current portfolio exposure
+- Evaluate the amount of capital still tied to borrowers
+- Monitor repayment risk across the lending portfolio
+- Support credit risk assessment and exposure monitoring
+
+It serves as a core denominator for several critical portfolio risk indicators including:
+- Non-Performing Loan (NPL) Ratio
+- Default Value Rate
+- Portfolio Risk Mix
+- Recovery and Repayment Analysis
+
+## Business Interpretation
+
+A high Loan at Risk value indicates significant outstanding exposure still subject to repayment performance. While active loans may generate future returns, delinquent and defaulted loans increase the probability of financial loss and liquidity pressure.
+
+Monitoring this metric helps financial institutions:
+- assess portfolio health,
+- track credit exposure,
+- and proactively manage repayment risk.
+
+## Technical Notes
+
+- Calculated using the `Outstanding_Amount` column.
+- Includes only loans with statuses:
+  - Active
+  - Delinquent
+  - Defaulted
+- Excludes closed loans since they no longer contribute to portfolio risk exposure.
+- Aggregated using the CALCULATE and SUM functions.
+
+================================================================================
+
+# Default Rate
+
+## DAX Formula
+
+```DAX
+Default Rate = 
+
+VAR Total_Default =
+    CALCULATE(
+        COUNT(portfolio_table[Loan_ID]),
+        portfolio_table[Loan_Status] = "Defaulted"
+    )
+
+VAR Total_Outstanding =
+    CALCULATE(
+        COUNT(portfolio_table[Loan_ID]),
+        portfolio_table[Loan_Status] <> "Closed"
+    )
+
+RETURN
+DIVIDE(Total_Default, Total_Outstanding)
+```
+
+## Business Definition
+
+Default Rate measures the proportion of outstanding loans within the portfolio that have entered default status. It evaluates the percentage of borrowers who failed to meet repayment obligations relative to the total active loan population.
+
+## Analytical Purpose
+
+This metric is used to:
+- assess portfolio credit quality,
+- monitor borrower repayment behavior,
+- identify deterioration in lending performance,
+- and evaluate overall portfolio stability.
+
+It serves as a critical indicator for:
+- credit risk management,
+- lending policy evaluation,
+- portfolio monitoring,
+- and financial risk reporting.
+
+## Business Interpretation
+
+A rising Default Rate indicates worsening repayment performance and increased portfolio vulnerability. High default levels may lead to:
+- increased financial losses,
+- reduced liquidity,
+- higher provisioning requirements,
+- and stricter regulatory scrutiny.
+
+Conversely, a lower Default Rate reflects stronger borrower performance and healthier portfolio quality.
+
+Financial institutions closely monitor this metric to:
+- detect emerging portfolio stress,
+- improve risk controls,
+- and optimize lending strategies.
+
+## Technical Notes
+
+- Calculated using total count of defaulted loans.
+- Compared against all non-closed loans within the portfolio.
+- Closed loans are excluded because they no longer contribute to active repayment risk.
+- Uses the DIVIDE function to safely handle division operations and avoid divide-by-zero errors.
+- Returns a ratio that may be formatted as a percentage within Power BI.
+
+================================================================================
+
+# Non-Performing Loan (NPL) Ratio
+
+## DAX Formula
+
+```DAX
+NPL = 
+
+VAR default_exposure =
+    CALCULATE(
+        SUM(portfolio_table[Outstanding_Amount]),
+        portfolio_table[Loan_Status] = "Defaulted"
+    )
+
+VAR Outstanding_Loan =
+    CALCULATE(
+        SUM(portfolio_table[Outstanding_Amount]),
+        portfolio_table[Loan_Status] <> "Closed"
+    )
+
+RETURN
+DIVIDE(default_exposure, Outstanding_Loan)
+```
+
+## Business Definition
+
+The Non-Performing Loan (NPL) Ratio measures the proportion of total outstanding loan exposure that has entered default status. It evaluates the percentage of the active lending portfolio that is no longer generating expected repayments.
+
+The metric is one of the most critical indicators used in credit risk management and portfolio quality assessment.
+
+## Analytical Purpose
+
+This metric is used to:
+- assess portfolio health,
+- monitor credit deterioration,
+- measure default exposure concentration,
+- evaluate lending performance,
+- and support regulatory and risk reporting.
+
+It serves as a primary indicator for:
+- credit risk monitoring,
+- loan performance analysis,
+- portfolio stress evaluation,
+- and executive risk oversight.
+
+## Business Interpretation
+
+A higher NPL Ratio indicates worsening portfolio quality and increased exposure to potential financial losses. Elevated NPL levels may result in:
+- reduced profitability,
+- higher loan loss provisions,
+- liquidity pressure,
+- tighter lending policies,
+- and increased regulatory scrutiny.
+
+A lower NPL Ratio generally reflects:
+- stronger borrower repayment behavior,
+- healthier credit quality,
+- and more effective risk management practices.
+
+Financial institutions continuously monitor this metric to ensure sustainable portfolio performance and early detection of credit risk deterioration.
+
+## Technical Notes
+
+- Calculated using the total outstanding amount of loans classified as `Defaulted`.
+- Compared against all non-closed outstanding loan exposure within the portfolio.
+- Closed loans are excluded because they no longer contribute to active credit exposure.
+- Uses the DIVIDE function to safely manage division operations and avoid divide-by-zero errors.
+- Returns a ratio that is typically formatted as a percentage in Power BI reporting.
+
+================================================================================
+
+# High Risk Exposure
+
+## DAX Formula
+
+```DAX
+High_Risk = 
+CALCULATE(
+    [Loan at Risk],
+    portfolio_table[Result] = "High Risk"
+)
+```
+
+## Business Definition
+
+High Risk Exposure represents the total outstanding loan amount currently classified under the organization's highest credit risk category. These loans exhibit elevated probability of repayment failure and increased likelihood of financial loss.
+
+## Analytical Purpose
+
+This metric is used to:
+- identify concentration of high-risk borrowers,
+- monitor vulnerable segments within the portfolio,
+- assess exposure to potential defaults,
+- and support strategic risk mitigation decisions.
+
+It helps management evaluate:
+- portfolio instability,
+- concentration risk,
+- and credit quality deterioration.
+
+## Business Interpretation
+
+An increase in High Risk Exposure indicates growing vulnerability within the lending portfolio. Elevated high-risk concentration may lead to:
+- higher future default rates,
+- increased non-performing loans,
+- reduced portfolio quality,
+- and greater financial loss exposure.
+
+This metric is critical for proactive portfolio monitoring and credit risk management.
+
+## Technical Notes
+
+- Derived from the existing `Loan at Risk` measure.
+- Filters only loans categorized as `High Risk`.
+- Based on outstanding loan exposure rather than original disbursed loan amount.
+- Calculated dynamically using the CALCULATE function.
+
+================================================================================
+
+# High Risk Rate
+
+## DAX Formula
+
+```DAX
+High_Risk_Rate = 
+DIVIDE(
+    [High_Risk],
+    [Loan at Risk]
+)
+```
+
+## Business Definition
+
+High Risk Rate measures the proportion of total outstanding portfolio exposure currently classified as high risk.
+
+It quantifies the percentage share of the active lending portfolio exposed to elevated repayment uncertainty.
+
+## Analytical Purpose
+
+This metric is used to:
+- assess portfolio risk composition,
+- monitor exposure concentration,
+- evaluate credit quality distribution,
+- and support portfolio risk segmentation analysis.
+
+It serves as a key indicator for:
+- portfolio stress monitoring,
+- credit risk oversight,
+- and executive risk reporting.
+
+## Business Interpretation
+
+A higher High Risk Rate suggests that a larger portion of the institution’s portfolio is exposed to potential repayment failure. Sustained increases may indicate:
+- deteriorating borrower quality,
+- weakening credit standards,
+- increased default probability,
+- and rising portfolio instability.
+
+A lower High Risk Rate generally reflects healthier portfolio quality and stronger credit performance.
+
+## Technical Notes
+
+- Calculated by dividing High Risk Exposure by total Loan at Risk.
+- Returns a proportional ratio typically formatted as a percentage.
+- Uses the DIVIDE function for safe division handling.
+- Dependent on the previously defined:
+  - `High_Risk`
+  - `Loan at Risk`
+measures.
