@@ -31,16 +31,16 @@ This project was developed to provide an analytical framework capable of monitor
 
 The primary objectives of this project are:
 
-- to Analyze the overall health of the loan portfolio
-- to Measure portfolio exposure and loan-at-risk levels
-- to Calculate non-performing loan (NPL) ratios
-- to Identify default-prone customer segments
-- to Analyze portfolio risk by:
+- Analyze the overall health of the loan portfolio
+- Measure portfolio exposure and loan-at-risk levels
+- Calculate non-performing loan (NPL) ratios
+- Identify default-prone customer segments
+- Analyze portfolio risk by:
   - Location
   - Employment type
   - Loan type
   - Age group
-- to Develop an interactive dashboard for executive reporting and decision-making
+- Develop an interactive dashboard for executive reporting and decision-making
 
 
 
@@ -48,12 +48,12 @@ The primary objectives of this project are:
 
 ## Tools & Technologies Used
 
-    Tool                           Purpose 
-
-   Microsoft Excel          Data cleaning and preprocessing 
-   MySQL                    Data querying and KPI calculations 
-   Power BI                 Data visualization and dashboard development
-   Git & GitHub             Version control and project documentation
+    | Tool | Purpose |
+|---|---|
+| Microsoft Excel | Data cleaning and preprocessing |
+| MySQL | Data querying and KPI calculations |
+| Power BI | Data visualization and dashboard development |
+| Git & GitHub | Version control and project documentation |
 
 ---
 
@@ -105,13 +105,13 @@ The dashboard includes:
 
 The following KPIs were developed within the project:
 
-        KPI                                 Description 
- Total Exposure-            Total outstanding loan amount 
- Loan at Risk-              Total active, delinquent, and defaulted loan exposure 
- NPL Ratio-                 Percentage of defaulted exposure relative to total outstanding exposure 
- Default Rate-              Percentage of defaulted loans relative to total active portfolio 
- High Risk Rate-            Percentage of high-risk loans within the portfolio 
- Portfolio Risk Mix-        Distribution of low, medium, and high-risk exposure 
+      |  KPI |          Description |
+ |Total Exposure|           |Total outstanding loan amount |
+ |Loan at Risk|             |Total active, delinquent, and defaulted loan exposure |
+ |NPL Ratio |               |Percentage of defaulted exposure relative to total outstanding exposure |
+ |Default Rate |            |Percentage of defaulted loans relative to total active portfolio |
+ |High Risk Rate |          |Percentage of high-risk loans within the portfolio |
+ |Portfolio Risk Mix |       |Distribution of low, medium, and high-risk exposure ||
 
 ---
 
@@ -159,6 +159,7 @@ The Power BI dashboard provides the following capabilities:
 ---
 
 ## Repository Structure
+```text
 loan_portfolio_risk_analysis/
 │
 ├── data/
@@ -168,6 +169,7 @@ loan_portfolio_risk_analysis/
 ├── powerbi/
 ├── sql/
 └── README.md
+```
 
 
 
@@ -175,7 +177,7 @@ loan_portfolio_risk_analysis/
 
 ### Portfolio Overview Dashboard
 
-dashboard_overview.png
+![Dashboard Preview](images/dashboard_overview.png)
 
 ---
 
